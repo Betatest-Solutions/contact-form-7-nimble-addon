@@ -57,7 +57,6 @@ function contact7_nimble( $cfdata ) {
         $N_phone_work   = get_option('N_phone_work');
         $N_phone_mobile = get_option('N_phone_mobile');
         $N_title        = get_option('N_title');
-        // $N_tags         = get_option('N_tags');
 
         $first_name     = isset( $formdata[$N_Fname] )          ? $formdata[$N_Fname]           : '';
         $last_name      = isset( $formdata[$N_Lname] )          ? $formdata[$N_Lname]           : '';
