@@ -26,6 +26,15 @@ Copyright 2015 Okay Plus (email: joeydi@okaypl.us)
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+function cf7_plugin_check() {
+    $plugin_name = 'contact-form-7/wp-contact-form-7.php';
+
+    if ( !is_plugin_active($plugin_name) ) {
+        echo '<div class="wrap"><div class="error"><p>Contact Form 7 plugin is required to configure this Nimble plugin. Please install and activate Contact Form 7 plugin and then return to this page.</p></div></div>';
+        exit;
+    }
+}
+
 function nimble_add_pages() {
     add_menu_page('Nimble', 'Nimble', 'edit_pages', 'nimble', 'nimble_main_admin', plugins_url('/images/nimble.png', __FILE__));
     add_submenu_page( 'nimble', 'Mapping Fields', 'Mapping Fields', 'edit_pages', 'mapping-fields', 'nimble_mapping_fields');

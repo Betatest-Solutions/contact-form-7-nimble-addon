@@ -15,13 +15,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$plugin_name = 'contact-form-7/wp-contact-form-7.php';
-$is_active = is_plugin_active($plugin_name);
+$updates = array();
 
-if ( !is_plugin_active($plugin_name) ) {
-    echo '<div class="error"><p>Contact Form 7 plugin is required to configure this Nimble plugin. Please install and activate Contact Form 7 plugin and then return to this page.</p></div>';
-    exit;
-}
+cf7_plugin_check();
 
 if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
     $N_Fname = $_POST['N_Fname'];
