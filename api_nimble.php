@@ -69,6 +69,7 @@ class NimbleAPI {
     public function nimble_search_contact($emailaddress) {
         $access_token =  get_option('nimble_access_token');
         $method = 'GET';
+        $data = '';
 
         $url = 'https://api.nimble.com/api/v1/contacts/list?' . http_build_query(array(
         'access_token' => $access_token,
@@ -105,8 +106,6 @@ class NimbleAPI {
         $access_token =  get_option('nimble_access_token');
 
         if ($response_status == 'OK') {
-               // $url    = 'https://api.nimble.com/api/v1/contact?access_token=' . $access_token;
-
             $url = 'https://api.nimble.com/api/v1/contact?' . http_build_query(array( 'access_token' => $access_token));
             $method = 'POST';
 
@@ -138,6 +137,8 @@ class NimbleAPI {
 
             if ( get_option('N_tags') != "" ) {
                 $nimble_tags = get_option('N_tags');
+            } else {
+                $nimble_tags = '';
             }
 
             $data_fields = substr($data_fields, 0, -1);
