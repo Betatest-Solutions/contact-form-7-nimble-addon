@@ -42,29 +42,38 @@ function nimble_main_admin() {
     }
 }
 
-function contact7_nimble($cfdata) {
-    $formtitle = $cfdata->title();
-    $formdata = $cfdata->posted_data;
+function contact7_nimble( $cfdata ) {
+    if ( $submission = WPCF7_Submission::get_instance() ) {
+        $formdata = $submission->get_posted_data();
+    }
+
     require_once('api_nimble.php');
     $nimble = new NimbleAPI();
 
     try {
-        $N_Fname = get_option('N_Fname');
-        $N_Lname = stripslashes(get_option('N_Lname'));
-        $N_title = get_option('N_title');
-        $N_phone_work = get_option('N_phone_work');
+        $N_Fname        = get_option('N_Fname');
+        $N_Lname        = stripslashes(get_option('N_Lname'));
+        $N_email        = get_option('N_email');
+        $N_phone_work   = get_option('N_phone_work');
         $N_phone_mobile = get_option('N_phone_mobile');
-        $N_email = get_option('N_email');
-        $N_tags = get_option('N_tags');
+        $N_title        = get_option('N_title');
+        // $N_tags         = get_option('N_tags');
+
+        $first_name     = isset( $formdata[$N_Fname] )          ? $formdata[$N_Fname]           : '';
+        $last_name      = isset( $formdata[$N_Lname] )          ? $formdata[$N_Lname]           : '';
+        $email          = isset( $formdata[$N_email] )          ? $formdata[$N_email]           : '';
+        $phone_work     = isset( $formdata[$N_phone_work] )     ? $formdata[$N_phone_work]      : '';
+        $phone_mobile   = isset( $formdata[$N_phone_mobile] )   ? $formdata[$N_phone_mobile]    : '';
+        $title          = isset( $formdata[$N_title] )          ? $formdata[$N_title]           : '';
 
         $access_token = $nimble->nimble_refreshtoken_get_access_token();
-        update_option('nimble_access_token',$access_token);
+        update_option('nimble_access_token', $access_token);
+
         $counter = get_option('nimble_refresh_token_counter');
-        $counter = $counter + 1;
-        update_option('nimble_refresh_token_counter',$counter);
+        $counter += 1;
+        update_option('nimble_refresh_token_counter', $counter);
 
-        $nimble->nimble_add_contact($formdata[$N_Fname], $formdata[$N_Lname], $formdata[$N_email],$formdata[$N_phone_work],$formdata[$N_phone_mobile],$formdata[$N_title]);
-
+        $response = $nimble->nimble_add_contact($first_name, $last_name, $email, $phone_work, $phone_mobile, $title);
     } catch(AWeberAPIException $exc) {
 
     }
