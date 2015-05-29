@@ -23,44 +23,44 @@ if ( !is_plugin_active($plugin_name) ) {
     exit;
 }
 
-if ( $_POST['bcpl_hidden'] == 'Y' ) {
+if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
     $N_Fname = $_POST['N_Fname'];
     update_option('N_Fname', $N_Fname);
 
-    $CHKN_Fname = $_POST['CHKN_Fname'];
+    $CHKN_Fname = isset($_POST['CHKN_Fname']) ? $_POST['CHKN_Fname'] : '';
     update_option('CHKN_Fname', $CHKN_Fname);
 
     $N_Lname = $_POST['N_Lname'];
     update_option('N_Lname', $N_Lname);
 
-    $CHKN_Lname = $_POST['CHKN_Lname'];
+    $CHKN_Lname = isset($_POST['CHKN_Lname']) ? $_POST['CHKN_Lname'] : '';
     update_option('CHKN_Lname', $CHKN_Lname );
 
     $N_title = $_POST['N_title'];
     update_option('N_title', $N_title);
 
-    $CHKN_title = $_POST['CHKN_title'];
+    $CHKN_title = isset($_POST['CHKN_title']) ? $_POST['CHKN_title'] : '';
     update_option('CHKN_title', $CHKN_title);
 
     $N_phone_work = $_POST['N_phone_work'];
     update_option('N_phone_work', $N_phone_work);
 
-    $CHKN_phone_work = $_POST['CHKN_phone_work'];
+    $CHKN_phone_work = isset($_POST['CHKN_phone_work']) ? $_POST['CHKN_phone_work'] : '';
     update_option('CHKN_phone_work', $CHKN_phone_work);
 
     $N_phone_mobile = $_POST['N_phone_mobile'];
     update_option('N_phone_mobile', $N_phone_mobile );
 
-    $CHKN_phone_mobile = $_POST['CHKN_phone_mobile'];
+    $CHKN_phone_mobile = isset($_POST['CHKN_phone_mobile']) ? $_POST['CHKN_phone_mobile'] : '';
     update_option('CHKN_phone_mobile', $CHKN_phone_mobile);
 
     $N_email  = $_POST['N_email'];
     update_option('N_email',$N_email );
 
-    $CHKN_email = $_POST['CHKN_email'];
+    $CHKN_email = isset($_POST['CHKN_email']) ? $_POST['CHKN_email'] : '';
     update_option('CHKN_email', $CHKN_email);
 
-    $CHKN_support = $_POST['CHKN_support'];
+    $CHKN_support = isset($_POST['CHKN_support']) ? $_POST['CHKN_support'] : '';
     update_option('CHKN_support', $CHKN_support);
 
     $N_tags = $_POST['N_tags'];
