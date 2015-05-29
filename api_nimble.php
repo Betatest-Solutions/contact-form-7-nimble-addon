@@ -108,49 +108,71 @@ class NimbleAPI {
         if ($response_status == 'OK') {
             $url = 'https://api.nimble.com/api/v1/contact?' . http_build_query(array( 'access_token' => $access_token));
             $method = 'POST';
+            $fields = array();
+            $data = array( 'type' => 'person' );
 
-            $description = ' this is description data';
-
-            if ( get_option('CHKN_Fname') =='on' ) {
-                $data_fields = '"first name":[{"value":"'.$firstname.'","modifier":""}],';
+            if ( get_option('CHKN_Fname') == 'on' ) {
+                $fields['first name'] = array();
+                array_push( $fields['first name'], array(
+                    'value' => $firstname,
+                    'modifier' => '',
+                ) );
             }
 
-            if ( get_option('CHKN_Lname') =='on' ) {
-                $data_fields .= '"last name":[{"value":"'.$lastname.'","modifier":""}],';
+            if ( get_option('CHKN_Lname') == 'on' ) {
+                $fields['last name'] = array();
+                array_push( $fields['last name'], array(
+                    'value' => $lastname,
+                    'modifier' => '',
+                ) );
             }
 
-            if ( get_option('CHKN_title') =='on' ) {
-                $data_fields .= '"title":[{"value":"'.$title.'","modifier":""}],';
+            if ( get_option('CHKN_title') == 'on' ) {
+                $fields['title'] = array();
+                array_push( $fields['title'], array(
+                    'value' => $title,
+                    'modifier' => '',
+                ) );
             }
 
-            if ( get_option('CHKN_email') =='on' ) {
-                $data_fields .= '"email":[{"value":"'.$emailaddress.'","modifier":"personal"}],';
+            if ( get_option('CHKN_email') == 'on' ) {
+                $fields['email'] = array();
+                array_push( $fields['email'], array(
+                    'value' => $emailaddress,
+                    'modifier' => 'personal',
+                ) );
             }
 
-            if ( ( get_option('CHKN_phone_work') =='on' ) && ( get_option('CHKN_phone_mobile') == 'on' ) ) {
-                $data_fields .= '"phone":[{"value":"' . $phone_work . '","modifier":"work"},{"value":"' . $phone_mobile . '","modifier":"mobile"}],';
-            } else if ( ( get_option('CHKN_phone_work') =='on' ) ) {
-                $data_fields .= '"phone":[{"value":"'.$phone_work.'","modifier":"work"}],';
-            } else if ( ( get_option('CHKN_phone_mobile') =='on' ) ) {
-                $data_fields .= '"phone":[{"value":"'.$phone_mobile.'","modifier":"mobile"}],';
+            if ( get_option('CHKN_phone_work') == 'on' || get_option('CHKN_phone_mobile') == 'on' ) {
+                $fields['phone'] = array();
             }
 
-            if ( get_option('N_tags') != "" ) {
-                $nimble_tags = get_option('N_tags');
-            } else {
-                $nimble_tags = '';
+            if ( get_option('CHKN_phone_work') == 'on' ) {
+                array_push( $fields['phone'], array(
+                    'value' => $phone_work,
+                    'modifier' => 'work',
+                ) );
             }
 
-            $data_fields = substr($data_fields, 0, -1);
+            if ( get_option('CHKN_phone_mobile') == 'on' ) {
+                array_push( $fields['phone'], array(
+                    'value' => $phone_mobile,
+                    'modifier' => 'mobile',
+                ) );
+            }
 
-            $data = '{"fields":{'.$data_fields.'},"type":"person","tags":"'.$nimble_tags.'"}';
+            if ( get_option('N_tags') ) {
+                $data['tags'] = get_option('N_tags');
+            }
+
+            $data['fields'] = $fields;
 
             $headers = array(
                 'Accept: application/json',
                 'Content-Type: application/json'
             );
 
-            $response_data = $this->nimble_request($url, $method, $data, $headers);
+            $response_data = $this->nimble_request($url, $method, json_encode($data), $headers);
 
             return $response_data;
         } else {
