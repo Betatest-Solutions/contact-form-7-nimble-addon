@@ -159,10 +159,3 @@ if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
         </p>
     </form>
 </div>
-
-<div class="info-box" style="border-top: 1px solid #ccc; padding-top:10px;width:620px;">
-    <a href="http://twitter.com/vxhq" class="button button-secondary" target="_blank">Follow @vxhq</a>
-    <a href="http://viktorixinnovative.com/track/support-cf7-nimble" class="button button-secondary" target="_blank">Get Support</a>
-    <a href="http://viktorixinnovative.com/track/bug-cf7-nimble" class="button button-secondary" target="_blank">Report a Bug</a>
-    <a href="http://www.projectarmy.net" class="button button-primary" target="_blank">Need WordPress help?</a>
-</div>
