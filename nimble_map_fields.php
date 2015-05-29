@@ -62,8 +62,7 @@ if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
     $N_tags = $_POST['N_tags'];
     update_option('N_tags', $N_tags);
 
-    ?><div class="updated"><p><strong><?php _e('Options saved.' ); ?></strong></p></div><?php
-
+    $updates[] = '<strong>Options saved.</strong>';
 } else {
     $N_Fname = get_option('N_Fname');
     $CHKN_Fname = get_option('CHKN_Fname');
@@ -91,53 +90,72 @@ if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
 ?>
 
 <div class="wrap">
-    <?php echo "<h1>" . __( 'Mapping Fields', 'bcpl_trdom' ) . "</h1>"; ?>
-    <form name="bcpl_form" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-        <table style="width:500px;">
-            <tbody>
-                <tr style="text-align:left;">
-                    <th>Nimble Fields</th>
-                    <th>Contact Form 7 Fields <small>(Without square brackets)</small></th>
-                    <br />
-                </tr>
-                <tr>
-                    <td style="width:10em;padding-bottom: 8px;" ><input type="checkbox" name="CHKN_Fname" <?php if ($CHKN_Fname=='on') {echo 'checked="checked"';}  ?>  />&nbsp;&nbsp;&nbsp;  First Name </td>
-                    <td><input type="text" name="N_Fname" value="<?php echo $N_Fname; ?>" size="40" /></td>
-                </tr>
-                <tr>
-                    <td style="width:10em;padding-bottom: 8px;" ><input type="checkbox" name="CHKN_Lname" <?php if ($CHKN_Lname=='on') {echo 'checked="checked"';} ?>  />&nbsp;&nbsp;&nbsp; Last Name </td>
-                    <td><input type="text" name="N_Lname" value="<?php echo $N_Lname; ?>" size="40" /></td>
-                </tr>
-                <tr>
-                    <td style="width:10em;padding-bottom: 8px;" ><input type="checkbox" name="CHKN_title" <?php if ($CHKN_title=='on') {echo 'checked="checked"';} ?>  />&nbsp;&nbsp;&nbsp; Title </td>
-                    <td><input type="text" name="N_title" value="<?php echo $N_title; ?>" size="40" /></td>
-                </tr>
-                <tr>
-                    <td style="width:10em;padding-bottom: 8px;" ><input type="checkbox" name="CHKN_phone_work" <?php if ($CHKN_phone_work=='on') {echo 'checked="checked"';} ?>  />&nbsp;&nbsp;&nbsp; Phone(work) </td>
-                    <td><input type="text" name="N_phone_work" value="<?php echo $N_phone_work; ?>" size="40" /></td>
-                </tr>
-                <tr>
-                    <td style="width:10em;padding-bottom: 8px;" ><input type="checkbox" name="CHKN_phone_mobile" <?php if ($CHKN_phone_mobile=='on') {echo 'checked="checked"';} ?>  />&nbsp;&nbsp;&nbsp; Phone(mobile) </td>
-                    <td><input type="text" name="N_phone_mobile" value="<?php echo $N_phone_mobile; ?>" size="40" /></td>
-                </tr>
-                <tr>
-                    <td style="width:10em;padding-bottom: 8px;" ><input type="checkbox" name="CHKN_email" <?php if ($CHKN_email=='on') {echo 'checked="checked"';} ?>  />&nbsp;&nbsp;&nbsp; Email </td>
-                    <td><input type="text" name="N_email" value="<?php echo $N_email; ?>" size="40" /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <h3>Contact Tags</h3>
-                        <p><small>Add up to 5 tags for your contacts, separated with comma. For example, website lead. In Nimble, you can view all leads from your website using this tag.</small></p>
-                        <input type="text" name="N_tags" value="<?php echo $N_tags; ?>" size="40" />
-                    </td>
-                </tr>
-            </tbody>
+    <h2>Nimble Mapping Fields</h2>
+
+    <?php foreach ( $updates as $update ) : ?>
+    <div class="updated"><p><?php echo $update ?></p></div>
+    <?php endforeach; ?>
+
+    <form name="bcpl_form" method="post" action="<?php echo admin_url( 'admin.php?page=mapping-fields' ); ?>">
+        <table class="form-table">
+            <tr>
+                <th>Nimble Fields</th>
+                <th>Contact Form 7 Fields <small>(Without square brackets)</small></th>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <input type="checkbox" name="CHKN_Fname" <?php echo $CHKN_Fname == 'on' ? 'checked="checked"' : ''; ?>/>
+                    <label for="N_Fname">First Name</label>
+                </th>
+                <td><input type="text" name="N_Fname" id="N_Fname" value="<?php echo $N_Fname; ?>" class="regular-text" /></td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <input type="checkbox" name="CHKN_Lname" <?php echo $CHKN_Lname == 'on' ? 'checked="checked"' : ''; ?>/>
+                    <label for="N_Lname">Last Name</label>
+                </th>
+                <td><input type="text" name="N_Lname" id="N_Lname" value="<?php echo $N_Lname; ?>" class="regular-text" /></td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <input type="checkbox" name="CHKN_title" <?php echo $CHKN_title == 'on' ? 'checked="checked"' : ''; ?>/>
+                    <label for="N_title">Title</label>
+                </th>
+                <td><input type="text" name="N_title" id="N_title" value="<?php echo $N_title; ?>" class="regular-text" /></td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <input type="checkbox" name="CHKN_phone_work" <?php echo $CHKN_phone_work == 'on' ? 'checked="checked"' : ''; ?>/>
+                    <label for="N_phone_work">Phone (work)</label>
+                </th>
+                <td><input type="text" name="N_phone_work" id="N_phone_work" value="<?php echo $N_phone_work; ?>" class="regular-text" /></td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <input type="checkbox" name="CHKN_phone_mobile" <?php echo $CHKN_phone_mobile == 'on' ? 'checked="checked"' : ''; ?>/>
+                    <label for="N_phone_mobile">Phone (mobile)</label>
+                </th>
+                <td><input type="text" name="N_phone_mobile" id="N_phone_mobile" value="<?php echo $N_phone_mobile; ?>" class="regular-text" /></td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <input type="checkbox" name="CHKN_email" <?php echo $CHKN_email == 'on' ? 'checked="checked"' : ''; ?>/>
+                    <label for="N_email">Email</label>
+                </th>
+                <td><input type="text" name="N_email" id="N_email" value="<?php echo $N_email; ?>" class="regular-text" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h3>Contact Tags</h3>
+                    <p><small>Add up to 5 tags for your contacts, separated with comma. For example, website lead. In Nimble, you can view all leads from your website using this tag.</small></p>
+                    <input type="text" name="N_tags" value="<?php echo $N_tags; ?>" size="40" />
+                </td>
+            </tr>
         </table>
 
         <input type="hidden" name="bcpl_hidden" value="Y" />
-
         <p class="submit">
-            <input type="submit" class="button button-primary button-large" name="Submit" value="<?php _e('Save Changes', 'bcpl_trdom' ) ?>" />
+            <input type="submit" class="button button-primary" name="Submit" value="Save Changes" />
         </p>
     </form>
 </div>
