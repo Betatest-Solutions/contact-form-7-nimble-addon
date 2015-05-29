@@ -52,7 +52,11 @@ if ( isset( $_POST['nimble_authorize'] ) ) {
     }
 
     if ( empty( $errors ) ) {
-        $handle = 'https://api.nimble.com/oauth/authorize?client_id=' . $_POST["client_id"] . '&redirect_uri=' . $_POST["redirect_uri"] . '&response_type=code';
+        $handle = add_query_arg( array(
+            'client_id' => $_POST['client_id'],
+            'redirect_uri' => $_POST['redirect_uri'],
+            'response_type' => 'code',
+        ), 'https://api.nimble.com/oauth/authorize' );
         echo '<script type="text/javascript">  window.location = "' . $handle . '"  </script>';
     }
 }
@@ -139,7 +143,7 @@ if ( isset( $_GET['code'] ) ) {
         </tr>
     </table>
 
-    <form method="post" action="<?php echo str_replace('%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+    <form method="post" action="<?php echo admin_url( 'admin.php?page=nimble' ); ?>">
         <button type="submit" name="nimble_reset" value="true" class="button button-secondary">Reset Settings</button>
     </form>
 
