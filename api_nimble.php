@@ -1,8 +1,8 @@
 <?php
 
 /*
- * Nimble CRM API Class v0.2
- * http://viktorixinnovative.com/
+ * Nimble CRM API Class v0.1
+ * http://okaypl.us/
  *
  * Copyright 2013 Viktorix Innovative (email: support@viktorixinnovative.com)
  * Copyright 2015 Okay Plus (email: joeydi@okaypl.us)
@@ -40,68 +40,84 @@ class NimbleAPI {
 
     public function nimble_get_access_token($code) {
         $authen_code = $code;
-        $url         = 'https://api.nimble.com/oauth/token';
-        $method      = 'POST';
-        $data        = 'client_id='.$this->config['api_key'].'&client_secret='.$this->config['secret_key'].'&redirect_uri=' . $this->config['redirect_uri'] .'&code=' . $authen_code . '&grant_type=authorization_code';
+        $url = 'https://api.nimble.com/oauth/token';
+        $method = 'POST';
+        $data = array(
+            'client_id' => $this->config['api_key'],
+            'client_secret' => $this->config['secret_key'],
+            'redirect_uri' => $this->config['redirect_uri'],
+            'code' => $authen_code,
+            'grant_type' => 'authorization_code'
+        );
         $headers = array(
             'Accept: application/json',
             'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'
         );
-        $response_data = $this->nimble_request($url, $method, $data, $headers);
+        $response_data = $this->nimble_request($url, $method, http_build_query($data), $headers);
 
         return $response_data;
     }
 
     public function nimble_refreshtoken_get_access_token() {
         $request_token = get_option('nimble_refresh_token');
-        $url           = 'https://api.nimble.com/oauth/token';
-        $method        = 'POST';
-        $data          = 'client_id='.$this->config['api_key'].'&client_secret='.$this->config['secret_key'].'&redirect_uri=' . $this->config['redirect_uri'] .'&refresh_token=' . $request_token . '&grant_type=refresh_token';
+        $url = 'https://api.nimble.com/oauth/token';
+        $method = 'POST';
+        $data = array(
+            'client_id' => $this->config['api_key'],
+            'client_secret' => $this->config['secret_key'],
+            'redirect_uri' => $this->config['redirect_uri'],
+            'refresh_token' => $request_token,
+            'grant_type' => 'refresh_token',
+        );
         $headers = array(
             'Accept: application/json',
             'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'
         );
-        $response_data = $this->nimble_request($url, $method, $data,$headers);
+        $response_data = $this->nimble_request($url, $method, http_build_query($data), $headers);
 
-        return $response_data[1]->access_token;
-    }
-
-    public function nimble_search_contact($emailaddress) {
-        $access_token =  get_option('nimble_access_token');
-        $method = 'GET';
-        $data = '';
-
-        $url = 'https://api.nimble.com/api/v1/contacts/list?' . http_build_query(array(
-        'access_token' => $access_token,
-        'query' => '{"email":{"is":"' . $emailaddress . '"}}',
-        'fields'=> 'first name'
-        ));
-
-       $headers = array(
-            'Accept: application/json',
-            'Content-Type: application/json'
-        );
-        $response_data = $this->nimble_request($url, $method, $data,$headers);
-
-        if (($response_data[0] == 401) && ($response_data[1]->Error == 'Access Token is invalid or expired.')) {
-            $access_token = $this->nimble_refreshtoken_get_access_token();
-                    update_option('nimble_access_token',$access_token);
-
-            $this->nimble_search_contact( $emailaddress);
-        } else if (($response_data[0] == 200) && ($response_data[1]->meta->total == 0)) {
-            return "OK";
-        } else if (($response_data[0] == 200) && ($response_data[1]->meta->total != 0)) {
-            return "Email Already Exist";
-        } else if (($response_data[0] != 200)) {
-            if ($response_data[1] == '') {
-                return "syntax error";
-            } else {
-                return $response_data[1]. "error". $response_data[0] ;
-            }
+        if ( isset( $response_data[1]->access_token ) ) {
+            return $response_data[1]->access_token;
+        } else {
+            return false;
         }
     }
 
-    public function nimble_add_contact( $firstname, $lastname, $emailaddress, $phone_work, $phone_mobile, $title ) {
+    public function nimble_search_contact( $emailaddress ) {
+        $access_token = get_option( 'nimble_access_token' );
+        $method = 'GET';
+        $data = '';
+
+        $url = 'https://api.nimble.com/api/v1/contacts/ids?' . http_build_query( array(
+            'access_token' => $access_token,
+            'query' => json_encode( array( 'email' => array( 'is' => $emailaddress ) ) ),
+            'fields'=> 'first name'
+        ) );
+
+        $headers = array(
+            'Accept: application/json',
+            'Content-Type: application/json'
+        );
+        $response_data = $this->nimble_request($url, $method, $data, $headers);
+
+        if ( 401 == $response_data[0] && 'invalid_token' == $response_data[1]->error ) {
+            $access_token = $this->nimble_refreshtoken_get_access_token();
+
+            if ( $access_token ) {
+                update_option( 'nimble_access_token', $access_token );
+                $this->nimble_search_contact( $emailaddress );
+            } else {
+                return 'Error refreshing access token.';
+            }
+        } else if ( 200 == $response_data[0] && 0 == $response_data[1]->meta->total ) {
+            return 'OK';
+        } else if ( 200 == $response_data[0] && 0 != $response_data[1]->meta->total ) {
+            return 'Email Already Exist';
+        } else if ( 200 != $response_data[0] ) {
+            return sprintf( 'Code %d, Error: %s: %s', $response_data[0], $response_data[1]->error, $response_data[1]->error_description );
+        }
+    }
+
+    public function nimble_add_contact( $firstname, $lastname, $emailaddress, $phone_work, $phone_mobile, $title, $company ) {
         $response_status = $this->nimble_search_contact($emailaddress);
         $access_token =  get_option('nimble_access_token');
 
@@ -111,7 +127,7 @@ class NimbleAPI {
             $fields = array();
             $data = array( 'type' => 'person' );
 
-            if ( get_option('CHKN_Fname') == 'on' ) {
+            if ( get_option('CHKN_name') == 'on' || get_option('CHKN_Fname') == 'on' ) {
                 $fields['first name'] = array();
                 array_push( $fields['first name'], array(
                     'value' => $firstname,
@@ -119,7 +135,7 @@ class NimbleAPI {
                 ) );
             }
 
-            if ( get_option('CHKN_Lname') == 'on' ) {
+            if ( get_option('CHKN_name') == 'on' || get_option('CHKN_Lname') == 'on' ) {
                 $fields['last name'] = array();
                 array_push( $fields['last name'], array(
                     'value' => $lastname,
@@ -131,6 +147,14 @@ class NimbleAPI {
                 $fields['title'] = array();
                 array_push( $fields['title'], array(
                     'value' => $title,
+                    'modifier' => '',
+                ) );
+            }
+
+            if ( get_option('CHKN_company') == 'on' ) {
+                $fields['parent company'] = array();
+                array_push( $fields['parent company'], array(
+                    'value' => $company,
                     'modifier' => '',
                 ) );
             }

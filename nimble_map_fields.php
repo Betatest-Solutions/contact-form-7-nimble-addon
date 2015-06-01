@@ -1,6 +1,7 @@
 <?php
 
-/*  Copyright 2014 Viktorix Innovative  (email : support@viktorixinnovative.com)
+/*  Copyright 2014 Viktorix Innovative (email: support@viktorixinnovative.com)
+    Copyright 2015 Okay Plus (email: joeydi@okaypl.us)
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
@@ -20,23 +21,50 @@ $updates = array();
 cf7_plugin_check();
 
 if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
-    $N_Fname = $_POST['N_Fname'];
-    update_option('N_Fname', $N_Fname);
+    $N_name = $_POST['N_name'];
+    update_option('N_name', $N_name);
 
-    $CHKN_Fname = isset($_POST['CHKN_Fname']) ? $_POST['CHKN_Fname'] : '';
-    update_option('CHKN_Fname', $CHKN_Fname);
+    $CHKN_name = isset($_POST['CHKN_name']) ? $_POST['CHKN_name'] : '';
+    update_option('CHKN_name', $CHKN_name);
 
-    $N_Lname = $_POST['N_Lname'];
-    update_option('N_Lname', $N_Lname);
+    // Turn off First and Last Name fields if Name is checked
+    if ( 'on' == $CHKN_name ) {
+        $N_Fname = $_POST['N_Fname'];
+        update_option('N_Fname', $N_Fname);
 
-    $CHKN_Lname = isset($_POST['CHKN_Lname']) ? $_POST['CHKN_Lname'] : '';
-    update_option('CHKN_Lname', $CHKN_Lname );
+        $CHKN_Fname = '';
+        update_option('CHKN_Fname', $CHKN_Fname);
+
+        $N_Lname = $_POST['N_Lname'];
+        update_option('N_Lname', $N_Lname);
+
+        $CHKN_Lname = '';
+        update_option('CHKN_Lname', $CHKN_Lname );
+    } else {
+        $N_Fname = $_POST['N_Fname'];
+        update_option('N_Fname', $N_Fname);
+
+        $CHKN_Fname = isset($_POST['CHKN_Fname']) ? $_POST['CHKN_Fname'] : '';
+        update_option('CHKN_Fname', $CHKN_Fname);
+
+        $N_Lname = $_POST['N_Lname'];
+        update_option('N_Lname', $N_Lname);
+
+        $CHKN_Lname = isset($_POST['CHKN_Lname']) ? $_POST['CHKN_Lname'] : '';
+        update_option('CHKN_Lname', $CHKN_Lname );
+    }
 
     $N_title = $_POST['N_title'];
     update_option('N_title', $N_title);
 
     $CHKN_title = isset($_POST['CHKN_title']) ? $_POST['CHKN_title'] : '';
     update_option('CHKN_title', $CHKN_title);
+
+    $N_company = $_POST['N_company'];
+    update_option('N_company', $N_company);
+
+    $CHKN_company = isset($_POST['CHKN_company']) ? $_POST['CHKN_company'] : '';
+    update_option('CHKN_company', $CHKN_company);
 
     $N_phone_work = $_POST['N_phone_work'];
     update_option('N_phone_work', $N_phone_work);
@@ -64,6 +92,9 @@ if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
 
     $updates[] = '<strong>Options saved.</strong>';
 } else {
+    $N_name = get_option('N_name');
+    $CHKN_name = get_option('CHKN_name');
+
     $N_Fname = get_option('N_Fname');
     $CHKN_Fname = get_option('CHKN_Fname');
 
@@ -72,6 +103,9 @@ if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
 
     $N_title = get_option('N_title');
     $CHKN_title = get_option('CHKN_title');
+
+    $N_company = get_option('N_company');
+    $CHKN_company = get_option('CHKN_company');
 
     $N_phone_work = get_option('N_phone_work');
     $CHKN_phone_work = get_option('CHKN_phone_work');
@@ -104,6 +138,16 @@ if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
             </tr>
             <tr>
                 <th scope="row">
+                    <input type="checkbox" name="CHKN_name" <?php echo $CHKN_name == 'on' ? 'checked="checked"' : ''; ?>/>
+                    <label for="N_name">Full Name</label>
+                </th>
+                <td>
+                    <input type="text" name="N_name" id="N_name" value="<?php echo $N_name; ?>" class="regular-text" />
+                    <p><small>Full Name field will be split into first and last name on the first space. Can't be used in conjunction with First Name and Last Name fields.</small></p>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
                     <input type="checkbox" name="CHKN_Fname" <?php echo $CHKN_Fname == 'on' ? 'checked="checked"' : ''; ?>/>
                     <label for="N_Fname">First Name</label>
                 </th>
@@ -122,6 +166,13 @@ if ( isset( $_POST['bcpl_hidden'] ) && $_POST['bcpl_hidden'] == 'Y' ) {
                     <label for="N_title">Title</label>
                 </th>
                 <td><input type="text" name="N_title" id="N_title" value="<?php echo $N_title; ?>" class="regular-text" /></td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <input type="checkbox" name="CHKN_company" <?php echo $CHKN_company == 'on' ? 'checked="checked"' : ''; ?>/>
+                    <label for="N_company">Company</label>
+                </th>
+                <td><input type="text" name="N_company" id="N_company" value="<?php echo $N_company; ?>" class="regular-text" /></td>
             </tr>
             <tr>
                 <th scope="row">
