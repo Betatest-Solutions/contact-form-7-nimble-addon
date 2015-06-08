@@ -56,6 +56,16 @@ function contact7_nimble( $cfdata ) {
         $formdata = $submission->get_posted_data();
     }
 
+    // Apply filters to the form data
+    if ( has_filter( 'nimble_formdata' ) ) {
+        $formdata = apply_filters( 'nimble_formdata', $cfdata->title, $formdata );
+    }
+
+    // Allow filters to cancel nimble_add_contact by returning null
+    if ( !$formdata ) {
+        return false;
+    }
+
     require_once('api_nimble.php');
     $nimble = new NimbleAPI();
 
