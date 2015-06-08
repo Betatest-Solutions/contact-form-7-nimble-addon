@@ -6,7 +6,7 @@ Plugin URI: http://okaypl.us/
 Description: This plugin integrates Contact Form 7 with Nimble CRM to automatically import leads on form submission.
 Author: Okay Plus
 Author URI: http://okaypl.us/
-Version: 0.5
+Version: 0.6
 License: GPL2 or Later
 
 Copyright 2013 Viktorix Innovative (email: support@viktorixinnovative.com)
