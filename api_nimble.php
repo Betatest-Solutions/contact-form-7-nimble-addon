@@ -191,6 +191,8 @@ class NimbleAPI {
 
             $data['fields'] = $fields;
 
+            $data = apply_filters( 'nimble_add_contact_data', $data );
+
             $headers = array(
                 'Accept: application/json',
                 'Content-Type: application/json'
